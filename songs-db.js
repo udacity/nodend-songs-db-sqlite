@@ -60,10 +60,18 @@ class SongsDb extends EventEmitter {
     )
   }
 
-  async createSong ({ artist, album, song }) {
+  async createSong ({ artist, album, song, genreId }) {
     return this._insert(
-      'INSERT INTO songs (artist, album, song) VALUES (?, ?, ?)',
-      [ artist, album, song ]
+      'INSERT INTO songs (artist, album, song, genre_id) VALUES (?, ?, ?, ?)',
+      [ artist, album, song, genreId ]
+    )
+  }
+
+  async listSongsByGenre (genre) {
+    return this._list(
+      `SELECT s.artist, s.album, s.song, g.name FROM songs s
+       INNER JOIN genres g ON g.id = s.genre_id WHERE g.name = ?`,
+      [ genre ]
     )
   }
 }
