@@ -45,6 +45,27 @@ class SongsDb extends EventEmitter {
       this.db.each(query, params, onRow, onComplete)
     })
   }
+
+  async listSongsByArtist (artist) {
+    return this._list(
+      'SELECT * FROM songs WHERE artist = ?',
+      [ artist ]
+    )
+  }
+
+  async listSongsByArtistAndAlbum (artist, album) {
+    return this._list(
+      'SELECT * FROM songs WHERE artist = ? AND album = ?',
+      [ artist, album ]
+    )
+  }
+
+  async createSong ({ artist, album, song }) {
+    return this._insert(
+      'INSERT INTO songs (artist, album, song) VALUES (?, ?, ?)',
+      [ artist, album, song ]
+    )
+  }
 }
 
 module.exports = SongsDb
