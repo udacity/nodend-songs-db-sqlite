@@ -17,46 +17,75 @@ const db = new Database(dbFile)
 
 db.serialize(() => {
   db.run(`
-    CREATE TABLE songs (
+    CREATE TABLE genres (
       id INTEGER PRIMARY KEY,
-      artist TEXT,
-      album TEXT,
-      song TEXT
+      name TEXT
     )
   `, done)
+  db.run(`
+    CREATE TABLE songs (
+      id  INTEGER PRIMARY KEY,
+      artist TEXT,
+      album TEXT,
+      song TEXT,
+      genre_id INTEGER,
+      FOREIGN KEY(genre_id) REFERENCES genres(id)
+    )
+  `, done)
+
+  const genres = [{
+    id: 1,
+    name: 'Electronic'
+  }, {
+    id: 2,
+    name: 'Chiptune'
+  }]
+
+  const genreStm = db.prepare('INSERT INTO genres VALUES (?,?)')
+  genres.forEach(({ id, name }) => {
+    console.log('Creating:', JSON.stringify({ id, name }))
+    genreStm.run(id, name)
+  })
+  genreStm.finalize()
 
   const songs = [{
     artist: 'Bisou',
     album: 'Music Spaceshift',
-    song: 'Bad Flower'
+    song: 'Bad Flower',
+    genreId: 1
   }, {
     artist: 'Bisou',
     album: 'Music Spaceshift',
-    song: 'Panda'
+    song: 'Panda',
+    genreId: 1
   }, {
     artist: 'Bisou',
     album: 'Music Spaceshift',
-    song: 'Industrial'
+    song: 'Industrial',
+    genreId: 1
   }, {
     artist: 'Bisou',
     album: 'Haumea',
-    song: 'Moon Answer'
+    song: 'Moon Answer',
+    genreId: 1
   }, {
     artist: 'Komiku',
     album: `It's time for adventure`,
-    song: 'La Citadelle'
+    song: 'La Citadelle',
+    genreId: 2
   }, {
     artist: 'Komiku',
     album: `It's time for adventure`,
-    song: 'Bleu'
+    song: 'Bleu',
+    genreId: 2
   }]
 
-  const smt = db.prepare('INSERT INTO songs VALUES (?,?,?,?)')
+  const stm = db.prepare('INSERT INTO songs VALUES (?,?,?,?,?)')
   songs.forEach((song, idx) => {
     console.log('Creating:', JSON.stringify(song))
-    smt.run(idx, song.artist, song.album, song.song)
+    stm.run(idx, song.artist, song.album, song.song, song.genreId)
   })
-  smt.finalize()
+  stm.finalize()
 })
 db.close()
 
