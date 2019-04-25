@@ -1,0 +1,20 @@
+{
+  "name": "songs-db",
+  "version": "1.0.0",
+  "description": "SongsDB implementation with SQLite",
+  "main": "songs-db.js",
+  "scripts": {
+    "setup": "node setup",
+    "lint": "standard",
+    "lint:fix": "standard --fix"
+  },
+  "keywords": [],
+  "author": "Julián Duque <julian@nodesource.com>",
+  "license": "ISC",
+  "dependencies": {
+    "sqlite3": "^4.0.6"
+  },
+  "devDependencies": {
+    "standard": "^12.0.1"
+  }
+}
